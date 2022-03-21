@@ -77,7 +77,10 @@ class AddEvent extends StatefulWidget {
 
 class _AddEventState extends State<AddEvent> {
   final _formKey = GlobalKey<FormState>();
+  var _time=TextEditingController();
+  var _date=TextEditingController();
   TimeOfDay selectedTime = TimeOfDay.now();
+  DateTime selectedDate=DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -122,35 +125,52 @@ class _AddEventState extends State<AddEvent> {
           Container(
             margin: const EdgeInsets.all(20),
             child: TextFormField(
+                controller:_time,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
-                  labelText: "Date and Time",
+                  hintText:"Time",
+                  labelText: "Time",
                   suffixIcon: IconButton(
-                      icon:const Icons.calendar_month,
+                      icon: const Icon(Icons.calendar_month),
                       onPressed: () {
-                        _selectTime(context);
+                        setState(() {
+                          _selectTime(context);
+                        });
                       },
-                  ),
+                    ),
+                ),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Select Time';
+                }
+                return null;
+              },
+            ),
+          Container(
+            margin: const EdgeInsets.all(20),
+            child: TextFormField(
+              controller:_date,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: "Date",
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.calendar_month),
+                  onPressed: () {
+                    setState(() {
+                      _selectDate(context);
+                    });
+                  },
                 ),
               ),
             ),
-          SizedBox(
-              width: 100, // <-- Your width
-              height: 50.0, // <-- Your height
-              child: ElevatedButton(
-                  onPressed: () {
-                    _selectTime(context);
-                  },
-                  child: const Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Pick Time",
-                      textAlign: TextAlign.center,
-
-                    ),
-                  )),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Select Date';
+              }
+              return null;
+            },
           ),
-          Text("${selectedTime.hour}:${selectedTime.minute}"),
           ElevatedButton(
             onPressed: () {
               // Validate returns true if the form is valid, or false otherwise.
@@ -179,6 +199,22 @@ class _AddEventState extends State<AddEvent> {
     {
       setState(() {
         selectedTime = timeOfDay;
+        _time.text="${selectedTime.hour}:${selectedTime.minute} ";
+      });
+    }
+  }
+
+  _selectDate(BuildContext context) async {
+    final DateTime? dateOfDay= await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: selectedDate,
+      lastDate: DateTime(2025),
+    );
+    if(dateOfDay != null && dateOfDay != selectedDate){
+      setState((){
+        selectedDate=dateOfDay;
+        _date.text="${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
       });
     }
   }
