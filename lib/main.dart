@@ -139,13 +139,13 @@ class _AddEventState extends State<AddEvent> {
                       },
                     ),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Select Time';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Select Time';
-                }
-                return null;
-              },
             ),
           Container(
             margin: const EdgeInsets.all(20),
@@ -163,13 +163,13 @@ class _AddEventState extends State<AddEvent> {
                   },
                 ),
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Select Date';
+                }
+                return null;
+              },
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Select Date';
-              }
-              return null;
-            },
           ),
           ElevatedButton(
             onPressed: () {
@@ -202,6 +202,11 @@ class _AddEventState extends State<AddEvent> {
         _time.text="${selectedTime.hour}:${selectedTime.minute} ";
       });
     }
+    else if(timeOfDay==selectedTime){
+      setState((){
+        _time.text="${selectedTime.hour}:${selectedTime.minute} ";
+      });
+    }
   }
 
   _selectDate(BuildContext context) async {
@@ -214,6 +219,11 @@ class _AddEventState extends State<AddEvent> {
     if(dateOfDay != null && dateOfDay != selectedDate){
       setState((){
         selectedDate=dateOfDay;
+        _date.text="${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
+      });
+    }
+    else if(dateOfDay==selectedDate){
+      setState((){
         _date.text="${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
       });
     }
