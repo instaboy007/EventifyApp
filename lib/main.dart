@@ -160,7 +160,10 @@ class _AddEventState extends State<AddEvent> {
                   return null;
                 },
               ),
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8218d1a0c00ffa16fafb5775b50399f87f21c346
             ),
           Container(
             margin: const EdgeInsets.all(20),
