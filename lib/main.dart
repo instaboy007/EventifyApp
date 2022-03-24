@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 
 void main(){
-  runApp(const MaterialApp(
-    home : BaseLayout()
-  ));
+  runApp(const MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+        home : BaseLayout()
+    );
+  }
 }
 
 class BaseLayout extends StatefulWidget {
@@ -77,8 +91,8 @@ class AddEvent extends StatefulWidget {
 
 class _AddEventState extends State<AddEvent> {
   final _formKey = GlobalKey<FormState>();
-  var _time=TextEditingController();
-  var _date=TextEditingController();
+  final _time=TextEditingController();
+  final _date=TextEditingController();
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime selectedDate=DateTime.now();
   @override
@@ -131,7 +145,7 @@ class _AddEventState extends State<AddEvent> {
                   hintText:"Time",
                   labelText: "Time",
                   suffixIcon: IconButton(
-                      icon: const Icon(Icons.calendar_month),
+                      icon: const Icon(Icons.access_time),
                       onPressed: () {
                         setState(() {
                           _selectTime(context);
@@ -139,13 +153,14 @@ class _AddEventState extends State<AddEvent> {
                       },
                     ),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Select Time';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Select Time';
-                }
-                return null;
-              },
+
             ),
           Container(
             margin: const EdgeInsets.all(20),
@@ -163,13 +178,13 @@ class _AddEventState extends State<AddEvent> {
                   },
                 ),
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Select Date';
+                }
+                return null;
+              },
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Select Date';
-              }
-              return null;
-            },
           ),
           ElevatedButton(
             onPressed: () {
@@ -202,6 +217,11 @@ class _AddEventState extends State<AddEvent> {
         _time.text="${selectedTime.hour}:${selectedTime.minute} ";
       });
     }
+    else if(timeOfDay==selectedTime){
+      setState((){
+        _time.text="${selectedTime.hour}:${selectedTime.minute} ";
+      });
+    }
   }
 
   _selectDate(BuildContext context) async {
@@ -214,6 +234,11 @@ class _AddEventState extends State<AddEvent> {
     if(dateOfDay != null && dateOfDay != selectedDate){
       setState((){
         selectedDate=dateOfDay;
+        _date.text="${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
+      });
+    }
+    else if(dateOfDay==selectedDate){
+      setState((){
         _date.text="${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
       });
     }
