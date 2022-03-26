@@ -1,6 +1,11 @@
 const String tableEvents = 'events';
 
 class EventFields{
+
+  static final List<String> values = [
+    id, eventName, eventDescription, eventTime
+  ];
+
   static const String id = '_id';
   static const String eventName = 'eventName';
   static const String eventDescription = 'eventDescription';
@@ -32,6 +37,13 @@ class Event{
       eventDescription : eventDescription ?? this.eventDescription,
       eventTime : eventTime ?? this.eventTime,
     );
+
+  static Event fromJson(Map<String, Object?> json) => Event(
+    id: json[EventFields.id] as int?,
+    eventName: json[EventFields.eventName] as String,
+    eventDescription: json[EventFields.eventDescription] as String,
+    eventTime: DateTime.parse(json[EventFields.eventTime] as String),
+  );
 
   Map<String,Object?> toJson() => {
     EventFields.id : id,
