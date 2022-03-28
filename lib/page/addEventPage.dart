@@ -117,11 +117,12 @@ class _AddEventState extends State<AddEvent> {
             ),
           ),
           ElevatedButton(
-            onPressed: (){
+            onPressed: () async{
               // Validate returns true if the form is valid, or false otherwise.
               if (_formKey.currentState!.validate()) {
                 // If the form is valid, display a snackbar. In the real world,
                 // you'd often call a server or save the information in a database.
+                print("push");
                 // await Navigator.of(context).push(
                 //   MaterialPageRoute(builder: (context) => addEvent()),
                 // );
@@ -134,14 +135,16 @@ class _AddEventState extends State<AddEvent> {
       ),
     );
   }
-   addEvent() async{
+  addEvent() async{
+    print('inside addEvent');
     final event=Event(
       eventName:_name.text,
       eventDescription:_description.text,
       eventTime:DateTime(selectedDate.year,selectedDate.month,selectedDate.day,selectedTime.hour,selectedTime.minute),
     );
-
+    print('creating event');
     await EventsDatabase.instance.create(event);
+    print('outside addEvent');
   }
 
 

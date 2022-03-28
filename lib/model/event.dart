@@ -46,10 +46,9 @@ class Event{
   );
 
   Map<String,Object?> toJson() => {
-    EventFields.id : id,
-    EventFields.eventName : eventName,
-    EventFields.eventDescription : eventDescription,
-    EventFields.eventTime : eventTime.toIso8601String(),
-
+        EventFields.id: id,
+        EventFields.eventName: eventName,
+        EventFields.eventDescription: eventDescription,
+        EventFields.eventTime: eventTime.toIso8601String(),
   };
 }

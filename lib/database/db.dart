@@ -5,12 +5,13 @@ import 'package:eventify/model/event.dart';
 class EventsDatabase{
 
   static final EventsDatabase instance=EventsDatabase._init();
+
   static Database? _database;
+
   EventsDatabase._init();
 
   Future<Database> get database async{
-    print(await getDatabasesPath());
-    if(_database!=null) return _database!;
+    if(_database != null) return _database!;
 
     _database=await _initDB('events.db');
     return _database!;
@@ -40,7 +41,11 @@ class EventsDatabase{
 
   Future<Event> create(Event event) async{
     final db = await instance.database;
+    print('db:');
+    print(db);
     final id = await db.insert(tableEvents,event.toJson());
+    print('id:');
+    print(id);
 
     return event.copy(id: id);
   }
@@ -64,11 +69,13 @@ class EventsDatabase{
   }
 
   Future<List<Event>> readAllEvents() async{
+    print('readallevents is called');
     final db = await instance.database;
     const orderBy = '${EventFields.eventTime} ASC';
 
     final result = await db.query(tableEvents, orderBy: orderBy);
-
+    print(result);
+    print('finished');
     return result.map((json) => Event.fromJson(json)).toList();
   }
 
