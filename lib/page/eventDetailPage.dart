@@ -1,3 +1,4 @@
+import 'package:eventify/page/addEventPage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:eventify/database/db.dart';
@@ -41,6 +42,9 @@ class _EventDetailPageState extends State<EventDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar:AppBar(
+        actions: [editButton(), deleteButton()],
+      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
@@ -52,23 +56,43 @@ class _EventDetailPageState extends State<EventDetailPage> {
                     event.eventName,
                     style: const TextStyle(
                       color:Colors.black,
-                      fontSize:22,
+                      fontSize:28,
                       fontWeight:FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height:8),
                   Text(
-                    DateFormat.yMMMMd().format(event.eventTime),
+                    DateFormat.MMMd('en-US').format(event.eventTime) +"  "+ DateFormat.Hm().format(event.eventTime),
                     style:const TextStyle(color:Colors.black),
                   ),
                   const SizedBox(height:8),
                   Text(
                     event.eventDescription,
-                    style:const TextStyle(color:Colors.black,fontSize: 18),
+                    style:const TextStyle(color:Colors.black,fontSize: 24),
                   )
                 ],
               ),
             ),
     );
   }
+
+  Widget editButton() => IconButton(
+    icon: Icon(Icons.edit_outlined),
+    onPressed: () async {
+      if(isLoading) return;
+
+      await Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>  AddEvent(event: event),
+      ));
+      refreshEvents();
+    },
+  );
+
+  Widget deleteButton() => IconButton(
+    icon: Icon(Icons.delete),
+    onPressed: () async {
+      await EventsDatabase.instance.delete(widget.eventId);
+      Navigator.of(context).pop;
+    },
+  );
 }

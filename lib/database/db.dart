@@ -1,25 +1,28 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:eventify/model/event.dart';
+import 'package:synchronized/synchronized.dart';
 
 class EventsDatabase{
-
-  static final EventsDatabase instance=EventsDatabase._init();
+  static final _lock = Lock();
+  static final EventsDatabase instance = EventsDatabase._init();
 
   static Database? _database;
 
   EventsDatabase._init();
 
   Future<Database> get database async{
-    if(_database != null) return _database!;
-
-    _database=await _initDB('events.db');
+    // if(_database != null) {
+    //   return _database!;
+    // }
+    _database = await _initDB('events.db');
+    print('Database created Successfully');
     return _database!;
   }
 
   Future<Database> _initDB(String filePath) async{
-    final dbPath=await getDatabasesPath();
-    final path=join(dbPath,filePath);
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, filePath);
 
     return await openDatabase(path,version: 1,onCreate: _createDB);
   }
@@ -40,69 +43,76 @@ class EventsDatabase{
   }
 
   Future<Event> create(Event event) async{
-    final db = await instance.database;
-    print('db:');
-    print(db);
-    final id = await db.insert(tableEvents,event.toJson());
-    print('id:');
-    print(id);
+    return _lock.synchronized(() async{
+      final db = await instance.database;
+      final id = await db.insert(tableEvents, event.toJson());
+      return event.copy(id: id);
+    });
 
-    return event.copy(id: id);
   }
 
   Future<Event> readEvent(int id) async {
-    final db = await instance.database;
+    return _lock.synchronized(() async{
+      final db = await instance.database;
 
-    final maps=await db.query(
-      tableEvents,
-      columns:EventFields.values,
-      where: '${EventFields.id}=?',
-      whereArgs:[id],
-    );
+      final maps=await db.query(
+        tableEvents,
+        columns:EventFields.values,
+        where: '${EventFields.id}=?',
+        whereArgs:[id],
+      );
 
-    if(maps.isNotEmpty){
-      return Event.fromJson(maps.first);
-    }
-    else{
-      throw Exception('ID $id not Found!');
-    }
+      if(maps.isNotEmpty){
+        return Event.fromJson(maps.first);
+      }
+      else{
+        throw Exception('ID $id not Found!');
+      }
+    });
+
   }
 
   Future<List<Event>> readAllEvents() async{
-    print('readallevents is called');
-    final db = await instance.database;
-    const orderBy = '${EventFields.eventTime} ASC';
+    return _lock.synchronized(() async{
+      final db = await instance.database;
+      const orderBy = '${EventFields.eventTime} ASC';
+      final result = await db.query(tableEvents, orderBy: orderBy);
+      return result.map((json) => Event.fromJson(json)).toList();
+    });
 
-    final result = await db.query(tableEvents, orderBy: orderBy);
-    print(result);
-    print('finished');
-    return result.map((json) => Event.fromJson(json)).toList();
   }
 
   Future<int> update(Event event) async{
-    final db = await instance.database;
+    return _lock.synchronized(() async{
+      final db = await instance.database;
 
-    return db.update(
-      tableEvents,
-      event.toJson(),
-      where: '${EventFields.id} = ?',
-      whereArgs: [event.id],
-    );
+      return db.update(
+        tableEvents,
+        event.toJson(),
+        where: '${EventFields.id} = ?',
+        whereArgs: [event.id],
+      );
+    });
+
   }
 
   Future<int> delete(int id) async{
-    final db = await instance.database;
+    return _lock.synchronized(() async{
+      final db = await instance.database;
 
-    return await db.delete(
-      tableEvents,
-      where :'${EventFields.id} = ?',
-      whereArgs: [id],
-    );
+      return await db.delete(
+        tableEvents,
+        where :'${EventFields.id} = ?',
+        whereArgs: [id],
+      );
+    });
+
   }
 
   Future close() async{
-    final db=await instance.database;
-    db.close();
+    return _lock.synchronized(() async{
+      final db = await instance.database;
+      db.close();
+    });
   }
-
 }

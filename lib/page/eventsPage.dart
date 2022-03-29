@@ -27,19 +27,16 @@ class _EventsPageState extends State<EventsPage> {
   @override
   void dispose(){
     EventsDatabase.instance.close();
+
     super.dispose();
   }
 
   Future refreshEvents() async{
-    setState(() {
-      isLoading = true;
-    });
+    setState(()=>isLoading=true);
 
     events=await EventsDatabase.instance.readAllEvents();
 
-    setState(() {
-      isLoading = false;
-    });
+    setState(()=>isLoading=false);
   }
 
   @override
@@ -48,48 +45,35 @@ class _EventsPageState extends State<EventsPage> {
       body: Center(
         child:isLoading ? const CircularProgressIndicator() : events.isEmpty ? const Text('No Events', style:TextStyle(color:Colors.black54,fontSize:24)) : buildEvents(),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () async {
-          await Navigator.of(context).push(
-            MaterialPageRoute(builder:(context)=> const AddEvent())
-          );
-          refreshEvents();
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: const Icon(Icons.add),
+      //   onPressed: () async {
+      //     await Navigator.of(context).push(
+      //       MaterialPageRoute(builder:(context)=> const AddEvent())
+      //     );
+      //     refreshEvents();
+      //   },
+      // ),
     );
   }
 
   Widget buildEvents(){
     return ListView.separated(
-
         itemCount: events.length,
         itemBuilder: (context,index){
-          refreshEvents();
           final event = events[index];
-          print(events);
+          return GestureDetector(
+            onTap : () async {
+              await Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EventDetailPage(eventId:event.id!),
+              ));
 
-          return Container(
-
-            height:50,
-            child: Center(
-              child:Text('hellllo'+event.eventName),
-            ),
-
+              refreshEvents();
+            },
+              child: EventCardWidget(event: event, index:index),
           );
-          // return GestureDetector(
-          //   onTap : () async {
-          //     await Navigator.of(context).push(MaterialPageRoute(
-          //         builder: (context) => EventDetailPage(eventId:event.id!),
-          //     ));
-          //
-          //     refreshEvents();
-          //   },
-          //     child: EventCardWidget(event: event, index:index),
-          // );
         },
         separatorBuilder: (BuildContext context, int index)=>const Divider(),
-
     );
   }
 
