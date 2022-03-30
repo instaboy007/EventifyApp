@@ -70,6 +70,11 @@ class _AddEventState extends State<AddEvent> {
           Container(
             margin: const EdgeInsets.all(20),
             child: TextFormField(
+              onTap: () {
+                setState(() {
+                  _selectTime(context);
+                });
+              },
               controller:_time,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
@@ -95,6 +100,11 @@ class _AddEventState extends State<AddEvent> {
           Container(
             margin: const EdgeInsets.all(20),
             child: TextFormField(
+              onTap: () {
+                setState(() {
+                  _selectDate(context);
+                });
+              },
               controller:_date,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
@@ -134,6 +144,31 @@ class _AddEventState extends State<AddEvent> {
       ),
     );
   }
+  // addUpdateEvent() async{
+  //   final isValid=_formKey.currentState!.validate();
+  //
+  //   if(isValid){
+  //     final isUpdating = widget.event !=null;
+  //     if(isUpdating){
+  //       await updateEvent();
+  //     }
+  //     else{
+  //       await addEvent();
+  //     }
+  //     Navigator.of(context).pop();
+  //   }
+  // }
+  //
+  // updateEvent() async{
+  //   final event = widget.event!.copy(
+  //     eventName:_name.text,
+  //     eventDescription:_description.text,
+  //     eventTime:DateTime(selectedDate.year,selectedDate.month,selectedDate.day,selectedTime.hour,selectedTime.minute),
+  //   );
+  //
+  //   await EventsDatabase.instance.update(event);
+  // }
+
   addEvent() async{
     final event=Event(
       eventName:_name.text,

@@ -1,4 +1,6 @@
 import 'package:eventify/page/addEventPage.dart';
+import 'package:eventify/page/eventsPage.dart';
+import 'package:eventify/widget/eventWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:eventify/database/db.dart';
@@ -93,6 +95,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
     onPressed: () async {
       await EventsDatabase.instance.delete(widget.eventId);
       Navigator.of(context).pop;
+
     },
   );
 }
