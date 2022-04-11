@@ -3,7 +3,6 @@ import 'package:eventify/model/event.dart';
 import 'package:eventify/database/db.dart';
 import 'package:eventify/page/eventDetailPage.dart';
 import 'package:eventify/widget/eventCardWidget.dart';
-import 'package:eventify/page/addEventPage.dart';
 
 class EventsPage extends StatefulWidget {
   const EventsPage({Key? key}) : super(key: key);
@@ -41,6 +40,7 @@ class _EventsPageState extends State<EventsPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Center(
         child:isLoading ? const CircularProgressIndicator() : events.isEmpty ? const Text('No Events', style:TextStyle(color:Colors.black54,fontSize:24)) : buildEvents(),
@@ -70,7 +70,7 @@ class _EventsPageState extends State<EventsPage> {
 
               refreshEvents();
             },
-              child: EventCardWidget(event: event, index:index),
+            child: EventCardWidget(event: event, index:index),
           );
         },
         separatorBuilder: (BuildContext context, int index)=>const Divider(),

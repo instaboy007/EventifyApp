@@ -12,11 +12,8 @@ class EventsDatabase{
   EventsDatabase._init();
 
   Future<Database> get database async{
-    // if(_database != null) {
-    //   return _database!;
-    // }
+    // if(_database != null) return _database!;
     _database = await _initDB('events.db');
-    print('Database created Successfully');
     return _database!;
   }
 
@@ -29,8 +26,8 @@ class EventsDatabase{
 
   Future _createDB(Database db,int version) async{
 
-    final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    final textType = 'TEXT NOT NULL';
+    const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    const textType = 'TEXT NOT NULL';
 
     await db.execute('''
       CREATE TABLE $tableEvents(

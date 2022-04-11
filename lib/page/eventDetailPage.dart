@@ -1,6 +1,6 @@
-import 'package:eventify/page/addEventPage.dart';
-import 'package:eventify/page/eventsPage.dart';
-import 'package:eventify/widget/eventWidget.dart';
+// import 'package:eventify/page/addEventPage.dart';
+import 'package:eventify/page/addEditEventPage.dart';
+import 'package:eventify/widget/eventFormWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:eventify/database/db.dart';
@@ -34,7 +34,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
       isLoading = true;
     });
 
-    this.event = await EventsDatabase.instance.readEvent(widget.eventId);
+    event = await EventsDatabase.instance.readEvent(widget.eventId);
 
     setState(() {
       isLoading = false;
@@ -79,19 +79,19 @@ class _EventDetailPageState extends State<EventDetailPage> {
   }
 
   Widget editButton() => IconButton(
-    icon: Icon(Icons.edit_outlined),
+    icon: const Icon(Icons.edit_outlined),
     onPressed: () async {
       if(isLoading) return;
 
       await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) =>  AddEvent(event: event),
+          builder: (context) =>  AddEditEventPage(event: event),
       ));
       refreshEvents();
     },
   );
 
   Widget deleteButton() => IconButton(
-    icon: Icon(Icons.delete),
+    icon: const Icon(Icons.delete),
     onPressed: () async {
       await EventsDatabase.instance.delete(widget.eventId);
       Navigator.of(context).pop;
