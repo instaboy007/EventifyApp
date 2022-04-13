@@ -125,8 +125,6 @@ class EventFormWidget extends StatelessWidget {
   // }
 
   Widget buildEventTime(BuildContext context){
-    TextEditingController timeController = TextEditingController();
-    timeController.text = eventTime!;
     return Container(
       margin: const EdgeInsets.all(8),
       child : TextFormField(
@@ -139,13 +137,11 @@ class EventFormWidget extends StatelessWidget {
           );
           if(timeOfDay != null && timeOfDay != toTime(eventTime!))
           {
-            timeController.text=timeOfDay.format(context);
-            // eventTime=timeOfDay.format(context);
+            onChangedEventTime(timeOfDay.format(context));
           }
         },
         maxLines: 1,
-        controller: timeController,
-        // initialValue: eventTime,
+        initialValue: eventTime,
         style: const TextStyle(
           color: Colors.white70,
           fontWeight: FontWeight.bold,
@@ -169,8 +165,7 @@ class EventFormWidget extends StatelessWidget {
               );
               if(timeOfDay != null && timeOfDay != toTime(eventTime!))
               {
-                timeController.text=timeOfDay.format(context);
-                // eventTime=timeOfDay.format(context);
+                onChangedEventTime(timeOfDay.format(context));
               }
             },
           ),
@@ -188,10 +183,6 @@ class EventFormWidget extends StatelessWidget {
   }
 
   Widget buildEventDate(BuildContext context){
-
-    TextEditingController dateController = TextEditingController();
-    dateController.text = eventDate!;
-    late String date = eventDate!;
     return Container(
       margin: const EdgeInsets.all(8),
       child : TextFormField(
@@ -199,17 +190,17 @@ class EventFormWidget extends StatelessWidget {
         onTap: () async {
           final DateTime? dateOfDay= await showDatePicker(
             context: context,
+            // initialDate: toDate(eventDate!),
             initialDate: toDate(eventDate!),
             firstDate: toDate(eventDate!),
             lastDate: DateTime(2025),
           );
           if(dateOfDay != null && dateOfDay != toDate(eventDate!)){
-            dateController.text=DateFormat.MMMd('en-US').format(dateOfDay);
-            // date=DateFormat.MMMd('en-US').format(dateOfDay);
+            onChangedEventDate(DateFormat('yyyy-MM-dd').format(dateOfDay));
           }
         },
         maxLines: 1,
-        controller: dateController,
+        initialValue: eventDate,
         // initialValue: date,
         style: const TextStyle(
           color: Colors.white70,
@@ -229,13 +220,13 @@ class EventFormWidget extends StatelessWidget {
             onPressed: () async {
               final DateTime? dateOfDay= await showDatePicker(
                 context: context,
+                // initialDate: toDate(eventDate!),
                 initialDate: toDate(eventDate!),
                 firstDate: toDate(eventDate!),
                 lastDate: DateTime(2025),
               );
               if(dateOfDay != null && dateOfDay != toDate(eventDate!)){
-                dateController.text=DateFormat.MMMd('en-US').format(dateOfDay);
-                // date=DateFormat.MMMd('en-US').format(dateOfDay);
+                onChangedEventDate(DateFormat('yyyy-MM-dd').format(dateOfDay));
               }
             },
           ),
