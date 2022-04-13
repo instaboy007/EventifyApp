@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -34,10 +35,9 @@ class EventFormWidget extends StatelessWidget {
           children: [
             buildEventTime(context),
             const SizedBox(height: 8),
-            buildEventDate(),
+            buildEventDate(context),
             const SizedBox(height: 8),
             buildEventName(),
-            const SizedBox(height: 8),
             buildEventDescription(),
             const SizedBox(height: 8),
           ],
@@ -54,15 +54,20 @@ class EventFormWidget extends StatelessWidget {
         maxLines: 1,
         initialValue: eventName,
         style: const TextStyle(
-          color: Colors.black,
+          color: Colors.white70,
           fontWeight: FontWeight.bold,
-          fontSize: 20,
+          fontSize: 25,
         ),
         decoration: const InputDecoration(
           labelText: 'Event Name',
+          labelStyle: TextStyle(
+            color: Colors.blueGrey,
+          ),
           border: InputBorder.none,
           hintText: 'Enter Event Name',
-          hintStyle: TextStyle(color: Colors.grey),
+          hintStyle: TextStyle(
+              color: Colors.white38
+          ),
         ),
         // The validator receives the text that the user has entered.
         validator: (eventName) {
@@ -84,16 +89,21 @@ class EventFormWidget extends StatelessWidget {
         maxLines: 5,
         initialValue: eventDescription,
         style: const TextStyle(
-          color: Colors.black,
+          color: Colors.white70,
           fontWeight: FontWeight.bold,
-          fontSize: 18,
+          fontSize: 25,
         ),
         textAlign: TextAlign.start,
         decoration: const InputDecoration(
-            labelText: 'Event Description',
-            border: InputBorder.none,
-            hintText: 'Enter Event Description',
-            hintStyle: TextStyle(color: Colors.grey),
+          labelText: 'Event Description',
+          labelStyle: TextStyle(
+            color: Colors.blueGrey,
+          ),
+          border: InputBorder.none,
+          hintText: 'Enter Event Description',
+          hintStyle: TextStyle(
+              color: Colors.white38
+          ),
         ),
         // The validator receives the text that the user has entered.
         validator: (eventDescription) {
@@ -115,21 +125,40 @@ class EventFormWidget extends StatelessWidget {
   // }
 
   Widget buildEventTime(BuildContext context){
+    TextEditingController timeController = TextEditingController();
+    timeController.text = eventTime!;
     return Container(
       margin: const EdgeInsets.all(8),
       child : TextFormField(
+        keyboardType: TextInputType.none,
+        onTap: () async {
+          final TimeOfDay? timeOfDay = await showTimePicker(
+            context: context,
+            initialTime: toTime(eventTime!) ,
+            initialEntryMode: TimePickerEntryMode.dial,
+          );
+          if(timeOfDay != null && timeOfDay != toTime(eventTime!))
+          {
+            timeController.text=timeOfDay.format(context);
+            // eventTime=timeOfDay.format(context);
+          }
+        },
         maxLines: 1,
-        initialValue: eventTime,
+        controller: timeController,
+        // initialValue: eventTime,
         style: const TextStyle(
-          color: Colors.black,
+          color: Colors.white70,
           fontWeight: FontWeight.bold,
-          fontSize: 20,
+          fontSize: 30,
         ),
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText:"Select Time",
-          hintStyle: const TextStyle(color: Colors.grey),
+          hintStyle: const TextStyle(color: Colors.white38),
           labelText: "Time",
+          labelStyle: const TextStyle(
+            color: Colors.blueGrey,
+          ),
           suffixIcon: IconButton(
             icon: const Icon(Icons.access_time),
             onPressed: () async {
@@ -140,11 +169,9 @@ class EventFormWidget extends StatelessWidget {
               );
               if(timeOfDay != null && timeOfDay != toTime(eventTime!))
               {
-                onChangedEventTime(timeOfDay.format(context));
+                timeController.text=timeOfDay.format(context);
+                // eventTime=timeOfDay.format(context);
               }
-              // else if(timeOfDay==toTime(eventTime!)){
-              //   onChangedEventTime(timeOfDay.format(context));
-              // }
             },
           ),
         ),
@@ -160,26 +187,56 @@ class EventFormWidget extends StatelessWidget {
 
   }
 
-  Widget buildEventDate(){
+  Widget buildEventDate(BuildContext context){
+
+    TextEditingController dateController = TextEditingController();
+    dateController.text = eventDate!;
+    late String date = eventDate!;
     return Container(
       margin: const EdgeInsets.all(8),
       child : TextFormField(
+        keyboardType: TextInputType.none,
+        onTap: () async {
+          final DateTime? dateOfDay= await showDatePicker(
+            context: context,
+            initialDate: toDate(eventDate!),
+            firstDate: toDate(eventDate!),
+            lastDate: DateTime(2025),
+          );
+          if(dateOfDay != null && dateOfDay != toDate(eventDate!)){
+            dateController.text=DateFormat.MMMd('en-US').format(dateOfDay);
+            // date=DateFormat.MMMd('en-US').format(dateOfDay);
+          }
+        },
         maxLines: 1,
-        initialValue: eventDate,
+        controller: dateController,
+        // initialValue: date,
         style: const TextStyle(
-          color: Colors.black,
+          color: Colors.white70,
           fontWeight: FontWeight.bold,
-          fontSize: 20,
+          fontSize: 30,
         ),
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText:"Select Date",
-          hintStyle: const TextStyle(color: Colors.grey),
+          hintStyle: const TextStyle(color: Colors.white38),
           labelText: "Date",
+          labelStyle: const TextStyle(
+            color: Colors.blueGrey,
+          ),
           suffixIcon: IconButton(
             icon: const Icon(Icons.calendar_month),
-            onPressed: () {
-
+            onPressed: () async {
+              final DateTime? dateOfDay= await showDatePicker(
+                context: context,
+                initialDate: toDate(eventDate!),
+                firstDate: toDate(eventDate!),
+                lastDate: DateTime(2025),
+              );
+              if(dateOfDay != null && dateOfDay != toDate(eventDate!)){
+                dateController.text=DateFormat.MMMd('en-US').format(dateOfDay);
+                // date=DateFormat.MMMd('en-US').format(dateOfDay);
+              }
             },
           ),
         ),
@@ -194,49 +251,12 @@ class EventFormWidget extends StatelessWidget {
     );
   }
 
-  // _selectTime(BuildContext context) async {
-  //   final TimeOfDay? timeOfDay = await showTimePicker(
-  //     context: context,
-  //     initialTime: toTime(eventTime!) ,
-  //     initialEntryMode: TimePickerEntryMode.dial,
-  //
-  //   );
-  //   if(timeOfDay != null && timeOfDay != toTime(eventTime!))
-  //   {
-  //     setState(()=>{
-  //       eventTime = DateFormat.Hms().format(timeOfDay);
-  //     });
-  //
-  //   }
-  //   else if(timeOfDay==selectedTime){
-  //     setState((){
-  //       _time.text="${selectedTime.hour}:${selectedTime.minute} ";
-  //     });
-  //   }
-  // }
-
-  // _selectDate(BuildContext context) async {
-  //   final DateTime? dateOfDay= await showDatePicker(
-  //     context: context,
-  //     initialDate: selectedDate,
-  //     firstDate: selectedDate,
-  //     lastDate: DateTime(2025),
-  //   );
-  //   if(dateOfDay != null && dateOfDay != selectedDate){
-  //     setState((){
-  //       selectedDate=dateOfDay;
-  //       _date.text="${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
-  //     });
-  //   }
-  //   else if(dateOfDay==selectedDate){
-  //     setState((){
-  //       _date.text="${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
-  //     });
-  //   }
-  // }
-
   toTime(String time){
     return TimeOfDay(hour:int.parse(time.split(':')[0]),minute: int.parse(time.split(':')[1]));
+  }
+
+  toDate(String date){
+    return DateTime.parse(date);
   }
 
 }

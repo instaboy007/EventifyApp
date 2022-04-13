@@ -28,12 +28,10 @@ class _AddEditEventPageState extends State<AddEditEventPage> {
   @override
   void initState() {
     super.initState();
-
     eventName = widget.event?.eventName ?? '';
     eventDescription = widget.event?.eventDescription ?? '';
-    eventTime = DateFormat.Hms().format((widget.event?.eventTime)!);
+    eventTime = DateFormat.Hm().format((widget.event?.eventTime)!);
     eventDate = DateFormat('yyyy-MM-dd').format((widget.event?.eventTime)!);
-
   }
 
   @override

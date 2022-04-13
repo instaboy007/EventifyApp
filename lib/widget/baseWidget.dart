@@ -22,7 +22,7 @@ class _BaseLayoutState extends State<BaseLayout> {
   static const List<Widget> _widgetOptions = <Widget>[
     Events(),
     AddEvent(),
-    Calendar()
+    // Calendar()
   ];
 
 
@@ -42,7 +42,7 @@ class _BaseLayoutState extends State<BaseLayout> {
           items:const [
             BottomNavigationBarItem(icon: Icon(Icons.alarm),label: 'Events'),
             BottomNavigationBarItem(icon:Icon(Icons.add),label: 'Add Event'),
-            BottomNavigationBarItem(icon:Icon(Icons.calendar_month),label: 'Calendar')
+            // BottomNavigationBarItem(icon:Icon(Icons.calendar_month),label: 'Calendar')
           ],
           currentIndex: _selectedIndex,
           onTap: onItemTapped,

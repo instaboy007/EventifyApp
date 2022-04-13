@@ -1,3 +1,4 @@
+import 'package:eventify/page/addEditEventPage.dart';
 import 'package:flutter/material.dart';
 import 'package:eventify/model/event.dart';
 import 'package:eventify/database/db.dart';
@@ -45,15 +46,6 @@ class _EventsPageState extends State<EventsPage> {
       body: Center(
         child:isLoading ? const CircularProgressIndicator() : events.isEmpty ? const Text('No Events', style:TextStyle(color:Colors.black54,fontSize:24)) : buildEvents(),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   child: const Icon(Icons.add),
-      //   onPressed: () async {
-      //     await Navigator.of(context).push(
-      //       MaterialPageRoute(builder:(context)=> const AddEvent())
-      //     );
-      //     refreshEvents();
-      //   },
-      // ),
     );
   }
 

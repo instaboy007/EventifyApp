@@ -45,9 +45,9 @@ class EventCardWidget extends StatelessWidget {
                 Text(
                   event.eventName,
                   style: const TextStyle(
-                    color: Colors.black,
-                    fontSize:24,
-                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                    fontSize:25,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ],
@@ -56,11 +56,11 @@ class EventCardWidget extends StatelessWidget {
               children: [
                 Text(
                   time,
-                  style: const TextStyle(color: Colors.white,fontSize:28,fontWeight: FontWeight.bold),
+                  style: const TextStyle(color: Colors.white,fontSize:40,fontWeight: FontWeight.w900),
                 ),
                 Text(
                   date,
-                  style: TextStyle(color: Colors.grey.shade700,fontSize: 20,fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Colors.grey.shade700,fontSize: 20,fontWeight: FontWeight.w700),
                 ),
               ],
             ),

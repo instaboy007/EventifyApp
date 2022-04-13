@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:eventify/database/db.dart';
 import 'package:eventify/model/event.dart';
 
+import '../widget/baseWidget.dart';
+
 class EventDetailPage extends StatefulWidget {
   final int eventId;
 
@@ -50,27 +52,47 @@ class _EventDetailPageState extends State<EventDetailPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(16),
               child: ListView(
                 padding:const EdgeInsets.symmetric(vertical:8),
                 children:[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        DateFormat.Hm().format(event.eventTime),
+                        style:const TextStyle(
+                          color:Colors.white,
+                          fontSize:90,
+                          fontWeight:FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        DateFormat.MMMd('en-US').format(event.eventTime),
+                        style:const TextStyle(
+                          color:Colors.white,
+                          fontSize:25,
+                          fontWeight:FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height:25),
                   Text(
                     event.eventName,
                     style: const TextStyle(
-                      color:Colors.black,
-                      fontSize:28,
-                      fontWeight:FontWeight.bold,
+                      color:Colors.lightBlue,
+                      fontSize:35,
+                      fontWeight:FontWeight.w900,
                     ),
                   ),
                   const SizedBox(height:8),
                   Text(
-                    DateFormat.MMMd('en-US').format(event.eventTime) +"  "+ DateFormat.Hm().format(event.eventTime),
-                    style:const TextStyle(color:Colors.black),
-                  ),
-                  const SizedBox(height:8),
-                  Text(
                     event.eventDescription,
-                    style:const TextStyle(color:Colors.black,fontSize: 24),
+                    style:const TextStyle(
+                        color:Colors.white70,
+                        fontSize: 28
+                    ),
                   )
                 ],
               ),
@@ -94,8 +116,10 @@ class _EventDetailPageState extends State<EventDetailPage> {
     icon: const Icon(Icons.delete),
     onPressed: () async {
       await EventsDatabase.instance.delete(widget.eventId);
-      Navigator.of(context).pop;
-
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const BaseLayout()),
+      );
     },
   );
 }
